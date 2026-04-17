@@ -3,7 +3,8 @@
 
 #include"seg_display_properties.h"
 
-/*--Segment Pins
+/*
+--Segment Pins
 SEG_A        SEG_PIN7
 SEG_B        SEG_PIN6
 SEG_C        SEG_PIN4
