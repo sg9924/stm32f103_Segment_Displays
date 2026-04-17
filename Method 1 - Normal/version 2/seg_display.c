@@ -48,7 +48,7 @@ void seg_init()
 
 void seg_pins_reset()
 {
-	if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+	if(S.conn_type == SEG_COMMON_CATHODE)
 	{
 		GPIO_BIT_RESET(S.Seg_GPIO_Port, S.segs->seg_A);
 		GPIO_BIT_RESET(S.Seg_GPIO_Port, S.segs->seg_B);
@@ -59,7 +59,7 @@ void seg_pins_reset()
 		GPIO_BIT_RESET(S.Seg_GPIO_Port, S.segs->seg_G);
 		GPIO_BIT_RESET(S.Seg_GPIO_Port, S.segs->seg_H);
 	}
-	else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
+	else if(S.conn_type == SEG_COMMON_ANODE)
 	{
 		GPIO_BIT_SET(S.Seg_GPIO_Port, S.segs->seg_A);
 		GPIO_BIT_SET(S.Seg_GPIO_Port, S.segs->seg_B);
@@ -81,111 +81,172 @@ void seg_display(uint8_t character, uint8_t decimal)
 
 	if(character == '0')
 	{
-		if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+		if(S.conn_type == SEG_COMMON_CATHODE)
+		{
 			port_value = (1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_E | 1<<S.segs->seg_F);
-		else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
-			port_value = (port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_E | 1<<S.segs->seg_F);
-		if(decimal == WITH_DECIMAL)
-			port_value = port_value | (1<<S.segs->seg_H);
+			if(decimal == WITH_DECIMAL)
+				port_value |= (1<<S.segs->seg_H);
+		}
+		else if(S.conn_type == SEG_COMMON_ANODE)
+		{
+			port_value = ((port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_E | 1<<S.segs->seg_F));
+			if(decimal == WITH_DECIMAL)
+				port_value &= ~(1<<S.segs->seg_H);
+		}
 		GPIO_WriteOpPort(S.Seg_GPIO_Port, port_value);
 	}
 
 	if(character == '1')
 	{
-		if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+		if(S.conn_type == SEG_COMMON_CATHODE)
+		{
 			port_value = (1<<S.segs->seg_B | 1<<S.segs->seg_C);
-		else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
-			port_value = (port_reset_value) & ~(1<<S.segs->seg_B | 1<<S.segs->seg_C);
-		if(decimal == WITH_DECIMAL)
-			port_value = port_value | (1<<S.segs->seg_H);
+			if(decimal == WITH_DECIMAL)
+				port_value |= (1<<S.segs->seg_H);
+		}
+		else if(S.conn_type == SEG_COMMON_ANODE)
+		{
+			port_value = ((port_reset_value) & ~(1<<S.segs->seg_B | 1<<S.segs->seg_C));
+			if(decimal == WITH_DECIMAL)
+				port_value &= ~(1<<S.segs->seg_H);
+		}
+		
 		GPIO_WriteOpPort(S.Seg_GPIO_Port, port_value);
 	}
 
 	if(character == '2')
 	{
-		if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+		if(S.conn_type == SEG_COMMON_CATHODE)
+		{
 			port_value = (1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_G | 1<<S.segs->seg_D | 1<<S.segs->seg_E);
-		else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
-			port_value = (port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_G | 1<<S.segs->seg_D | 1<<S.segs->seg_E);
-		if(decimal == WITH_DECIMAL)
-			port_value = port_value | (1<<S.segs->seg_H);
+			if(decimal == WITH_DECIMAL)
+				port_value |= (1<<S.segs->seg_H);
+		}
+		else if(S.conn_type == SEG_COMMON_ANODE)
+		{
+			port_value = ((port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_G | 1<<S.segs->seg_D | 1<<S.segs->seg_E));
+			if(decimal == WITH_DECIMAL)
+				port_value &= ~(1<<S.segs->seg_H);
+		}
 		GPIO_WriteOpPort(S.Seg_GPIO_Port, port_value);
 	}
 
 	if(character == '3')
 	{
-		if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+		if(S.conn_type == SEG_COMMON_CATHODE)
+		{
 			port_value = (1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_G);
-		else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
-			port_value = (port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_G);
-		if(decimal == WITH_DECIMAL)
-			port_value = port_value | (1<<S.segs->seg_H);
+			if(decimal == WITH_DECIMAL)
+				port_value |= (1<<S.segs->seg_H);
+		}
+		else if(S.conn_type == SEG_COMMON_ANODE)
+		{
+			port_value = ((port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_G));
+			if(decimal == WITH_DECIMAL)
+				port_value &= ~(1<<S.segs->seg_H);
+		}
 		GPIO_WriteOpPort(S.Seg_GPIO_Port, port_value);
 	}
 
 	if(character == '4')
 	{
-		if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+		if(S.conn_type == SEG_COMMON_CATHODE)
+		{
 			port_value = (1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_F | 1<<S.segs->seg_G);
-		else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
-			port_value = (port_reset_value) & ~(1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_F | 1<<S.segs->seg_G);
-		if(decimal == WITH_DECIMAL)
-			port_value = port_value | (1<<S.segs->seg_H);
+			if(decimal == WITH_DECIMAL)
+				port_value |= (1<<S.segs->seg_H);
+		}
+		else if(S.conn_type == SEG_COMMON_ANODE)
+		{
+			port_value = ((port_reset_value) & ~(1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_F | 1<<S.segs->seg_G));
+			if(decimal == WITH_DECIMAL)
+				port_value &= ~(1<<S.segs->seg_H);
+		}
 		GPIO_WriteOpPort(S.Seg_GPIO_Port, port_value);
 	}
 
 	if(character == '5')
 	{
-		if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+		if(S.conn_type == SEG_COMMON_CATHODE)
+		{
 			port_value = (1<<S.segs->seg_A | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_F | 1<<S.segs->seg_G);
-		else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
-			port_value = (port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_F | 1<<S.segs->seg_G);
-		if(decimal == WITH_DECIMAL)
-			port_value = port_value | (1<<S.segs->seg_H);
+			if(decimal == WITH_DECIMAL)
+				port_value |= (1<<S.segs->seg_H);
+		}
+		else if(S.conn_type == SEG_COMMON_ANODE)
+		{
+			port_value = ((port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_F | 1<<S.segs->seg_G));
+			if(decimal == WITH_DECIMAL)
+				port_value &= ~(1<<S.segs->seg_H);
+		}
 		GPIO_WriteOpPort(S.Seg_GPIO_Port, port_value);
 	}
 
 	if(character == '6')
 	{
-		if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+		if(S.conn_type == SEG_COMMON_CATHODE)
+		{
 			port_value = (1<<S.segs->seg_A | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_E | 1<<S.segs->seg_F | 1<<S.segs->seg_G);
-		else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
-			port_value = (port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_E | 1<<S.segs->seg_F | 1<<S.segs->seg_G);
-		if(decimal == WITH_DECIMAL)
-			port_value = port_value | (1<<S.segs->seg_H);
+			if(decimal == WITH_DECIMAL)
+				port_value |= (1<<S.segs->seg_H);
+		}
+		else if(S.conn_type == SEG_COMMON_ANODE)
+		{
+			port_value = ((port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_E | 1<<S.segs->seg_F | 1<<S.segs->seg_G));
+			if(decimal == WITH_DECIMAL)
+				port_value &= ~(1<<S.segs->seg_H);
+		}
 		GPIO_WriteOpPort(S.Seg_GPIO_Port, port_value);
 	}
 
 	if(character == '7')
 	{
-		if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+		if(S.conn_type == SEG_COMMON_CATHODE)
+		{
 			port_value = (1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C);
-		else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
-			port_value = (port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C);
-		if(decimal == WITH_DECIMAL)
-			port_value = port_value | (1<<S.segs->seg_H);
+			if(decimal == WITH_DECIMAL)
+				port_value |= (1<<S.segs->seg_H);
+		}
+		else if(S.conn_type == SEG_COMMON_ANODE)
+		{
+			port_value = ((port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C));
+			if(decimal == WITH_DECIMAL)
+				port_value &= ~(1<<S.segs->seg_H);
+		}
 		GPIO_WriteOpPort(S.Seg_GPIO_Port, port_value);
 	}
 
 	if(character == '8')
 	{
-		if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+		if(S.conn_type == SEG_COMMON_CATHODE)
+		{
 			port_value = (1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_E | 1<<S.segs->seg_F | 1<<S.segs->seg_G);
-		else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
-			port_value = (port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_E | 1<<S.segs->seg_F | 1<<S.segs->seg_G);
-		if(decimal == WITH_DECIMAL)
-			port_value = port_value | (1<<S.segs->seg_H);
+			if(decimal == WITH_DECIMAL)
+				port_value |= (1<<S.segs->seg_H);
+		}
+		else if(S.conn_type == SEG_COMMON_ANODE)
+		{
+			port_value = ((port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_E | 1<<S.segs->seg_F | 1<<S.segs->seg_G));
+			if(decimal == WITH_DECIMAL)
+				port_value &= ~(1<<S.segs->seg_H);
+		}
 		GPIO_WriteOpPort(S.Seg_GPIO_Port, port_value);
 	}
 
 	if(character == '9')
 	{
-		if(SEG_CONNECTION_TYPE == SEG_COMMON_CATHODE)
+		if(S.conn_type == SEG_COMMON_CATHODE)
+		{
 			port_value = (1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_F | 1<<S.segs->seg_G);
-		else if(SEG_CONNECTION_TYPE == SEG_COMMON_ANODE)
-			port_value = (port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_F | 1<<S.segs->seg_G);
-		if(decimal == WITH_DECIMAL)
-			port_value = port_value | (1<<S.segs->seg_H);
+			if(decimal == WITH_DECIMAL)
+				port_value |= (1<<S.segs->seg_H);
+		}
+		else if(S.conn_type == SEG_COMMON_ANODE)
+		{
+			port_value = ((port_reset_value) & ~(1<<S.segs->seg_A | 1<<S.segs->seg_B | 1<<S.segs->seg_C | 1<<S.segs->seg_D | 1<<S.segs->seg_F | 1<<S.segs->seg_G));
+			if(decimal == WITH_DECIMAL)
+				port_value &= ~(1<<S.segs->seg_H);
+		}
 		GPIO_WriteOpPort(S.Seg_GPIO_Port, port_value);
 	}
 }
