@@ -17,7 +17,7 @@ Note:
 # Driver Details
 
 ## Method 1:
-- The usual method - just use the GPIo of the board
+- The usual method - just use the GPIO of the board
 - no external driver ICs
 
 ## Method 2:
